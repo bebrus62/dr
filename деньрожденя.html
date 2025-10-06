@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>С Днём Рождения, Вика!</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #ffecd2, #fcb69f);
+      color: #333;
+      text-align: center;
+      padding: 20px;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    h1, p {
+      animation: fadeIn 1s ease-in-out;
+      margin: 10px 0;
+    }
+    .hidden {
+      display: none;
+    }
+    button {
+      padding: 16px 32px;
+      font-size: 1.2em;
+      background-color: #ff6f61;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.1s ease, background 0.3s ease, box-shadow 0.3s ease;
+      margin-top: 20px;
+      box-shadow: 0 5px 15px rgba(255, 111, 97, 0.4);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:active {
+      transform: scale(0.95);
+      background-color: #e65549;
+      box-shadow: 0 3px 7px rgba(230, 85, 73, 0.7);
+    }
+    button:hover:not(:active) {
+      box-shadow: 0 7px 20px rgba(255, 111, 97, 0.7);
+    }
+    input {
+      padding: 14px 18px;
+      font-size: 1.1em;
+      border-radius: 10px;
+      border: 2px solid #ff6f61;
+      margin-top: 20px;
+      width: 80%;
+      max-width: 400px;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    input:focus {
+      outline: none;
+      border-color: #e65549;
+      box-shadow: 0 0 8px #e65549;
+    }
+    .hint {
+      font-size: 1em;
+      color: #666;
+      margin-top: 12px;
+      font-style: italic;
+      opacity: 0;
+      animation: fadeInHint 1s forwards;
+      max-width: 90vw;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #feedback {
+      font-weight: 600;
+      margin-top: 12px;
+      min-height: 24px;
+      font-size: 1.1em;
+    }
+    .correct {
+      color: #4caf50;
+    }
+    .wrong {
+      color: #f44336;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInHint {
+      to { opacity: 1; }
+    }
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      50% { transform: translateX(6px); }
+      75% { transform: translateX(-6px); }
+      100% { transform: translateX(0); }
+    }
+    .shake {
+      animation: shake 0.4s;
+    }
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background-color: #fff;
+      animation-name: fall;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+      opacity: 0.9;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1000;
+    }
+    @keyframes fall {
+      0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+    .counter-box {
+      margin: 25px auto;
+      font-size: 1.3em;
+      padding: 18px 20px;
+      background: #fff4f4;
+      border-radius: 16px;
+      max-width: 480px;
+      box-shadow: 0 4px 10px rgba(255, 111, 97, 0.3);
+    }
+    .share-btn {
+      margin-top: 30px;
+      font-size: 1.2em;
+      background-color: #0077ff;
+      box-shadow: 0 5px 15px rgba(0, 119, 255, 0.5);
+      transition: box-shadow 0.3s ease;
+    }
+    .share-btn:hover:not(:active) {
+      box-shadow: 0 7px 25px rgba(0, 119, 255, 0.7);
+    }
+    @media (max-width: 480px) {
+      button {
+        padding: 14px 28px;
+        font-size: 1.1em;
+      }
+      input {
+        width: 90%;
+        font-size: 1em;
+      }
+      .counter-box {
+        font-size: 1.1em;
+        padding: 15px 18px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+      p {
+        font-size: 1.1em;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <audio id="bg-music" autoplay loop>
+    <source src="https://cdn.pixabay.com/download/audio/2023/02/15/audio_f5f7e87a67.mp3?filename=ethnic-asian-music-13441.mp3" type="audio/mpeg" />
+    Твой браузер не поддерживает аудио.
+  </audio>
+
+  <audio id="correct-sound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_47f8f2f259.mp3?filename=correct-2-46134.mp3"></audio>
+  <audio id="wrong-sound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_b8933cb09f.mp3?filename=wrong-answer-126515.mp3"></audio>
+  <audio id="final-sound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c1e70ef863.mp3?filename=success-fanfare-trumpets-6185.mp3"></audio>
+
+  <div id="start-screen">
+    <h1>Привет, Вика! 🎁</h1>
+    <p>Разгадай 6 загадок и получи своё праздничное поздравление!</p>
+    <button id="start-btn">Начать</button>
+  </div>
+
+  <div id="puzzle-screen" class="hidden" aria-live="polite" aria-atomic="true">
+    <h1 id="riddle-title">Загадка</h1>
+    <p id="riddle-text">Загружается...</p>
+    <input type="text" id="answer" autocomplete="off" placeholder="Твой ответ" aria-label="Ответ на загадку" />
+    <div class="hint" id="hint-text"></div>
+    <button id="answer-btn">Ответить</button>
+    <p id="feedback" role="alert" aria-live="assertive"></p>
+  </div>
+
+  <div id="congrats-screen" class="hidden" aria-live="polite">
+    <h1>С Днём Рождения, Вика! 🎉</h1>
+    <p>
+      Ты разгадала все загадки!<br />
+      Желаю тебе счастья, вдохновения и настоящей магии в каждом дне! 💖
+    </p>
+
+    <div class="counter-box" id="age-counter">
+      ⏳ Загружается возраст и дни до следующего Дня Рождения...
+    </div>
+
+    <button class="share-btn" id="share-btn">📤 Поделиться поздравлением</button>
+  </div>
+
+  <script>
+    const riddles = [
+      {
+        question: "Я в небе ночью, мечты навожу… Что я?",
+        answers: ["луна", "месяц"],
+        hint: "Светит ночью, иногда исчезает",
+      },
+      {
+        question: "Он без зубов, но грызёт. Что это?",
+        answers: ["время"],
+        hint: "Летит, не возвращаясь",
+      },
+      {
+        question: "Кто всегда идёт, но не двигается с места?",
+        answers: ["часы"],
+        hint: "Показывает время",
+      },
+      {
+        question: "Без языка, а говорит.",
+        answers: ["радио", "эхо"],
+        hint: "Слушаем в наушниках или в горах",
+      },
+      {
+        question: "Не лает, не кусает, а в дом не пускает.",
+        answers: ["замок"],
+        hint: "Ключ нужен, чтобы открыть",
+      },
+      {
+        question: "Всегда со мной, но в зеркало смотрит.",
+        answers: ["тень"],
+        hint: "Следует за мной в солнечный день",
+      },
+    ];
+
+    let current = 0;
+    const correctSound = document.getElementById("correct-sound");
+    const wrongSound = document.getElementById("wrong-sound");
+    const finalSound = document.getElementById("final-sound");
+
+    const startScreen = document.getElementById("start-screen");
+    const puzzleScreen = document.getElementById("puzzle-screen");
+    const congratsScreen = document.getElementById("congrats-screen");
+    const riddleTitle = document.getElementById("riddle-title");
+    const riddleText = document.getElementById("riddle-text");
+    const answerInput = document.getElementById("answer");
+    const feedback = document.getElementById("feedback");
+    const hintText = document.getElementById("hint-text");
+    const ageCounter = document.getElementById("age-counter");
+    const bgMusic = document.getElementById("bg-music");
+
+    document.getElementById("start-btn").addEventListener("click", () => {
+      startScreen.classList.add("hidden");
+      puzzleScreen.classList.remove("hidden");
+      showRiddle();
+      bgMusic.play();
+    });
+
+    document.getElementById("answer-btn").addEventListener("click", checkAnswer);
+
+    answerInput.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        checkAnswer();
+      }
+    });
+
+    function showRiddle() {
+      riddleTitle.textContent = `Загадка ${current + 1} из ${riddles.length}`;
+      riddleText.textContent = riddles[current].question;
+      answerInput.value = "";
+      feedback.textContent = "";
+      feedback.className = "";
+      hintText.textContent = `Подсказка: ${riddles[current].hint}`;
+    }
+
+    function checkAnswer() {
+      const userAnswer = answerInput.value.trim().toLowerCase();
+      const correct = riddles[current].answers;
+
+      if (correct.includes(userAnswer)) {
+        correctSound.play();
+        feedback.textContent = "Правильно!";
+        feedback.className = "correct";
+        current++;
+        if (current < riddles.length) {
+          setTimeout(() => {
+            showRiddle();
+            answerInput.focus();
+          }, 800);
+        } else {
+          setTimeout(() => {
+            puzzleScreen.classList.add("hidden");
+            congratsScreen.classList.remove("hidden");
+            finalSound.play();
+            launchConfetti();
+            showAgeCounter();
+          }, 800);
+        }
+      } else {
+        wrongSound.play();
+        feedback.textContent = "Не совсем… Попробуй ещё 😉";
+        feedback.className = "wrong";
+        answerInput.classList.add("shake");
+        setTimeout(() => answerInput.classList.remove("shake"), 400);
+        answerInput.focus();
+      }
+    }
+
+    function launchConfetti() {
+      for (let i = 0; i < 120; i++) {
+        const confetti = document.createElement("div");
+        confetti.classList.add("confetti");
+        confetti.style.left = Math.random() * 100 + "vw";
+        confetti.style.animationDuration = (Math.random() * 3 + 2) + "s";
+        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
+        confetti.style.width = confetti.style.height = (Math.random() * 7 + 5) + "px";
+        confetti.style.top = -10 + "px";
+        document.body.appendChild(confetti);
+
+        setTimeout(() => {
+          confetti.remove();
+        }, 5000);
+      }
+    }
+
+    function showAgeCounter() {
+      const birthDate = new Date(2009, 10, 3); // 3 ноября 2009 (месяцы с 0)
+      const nextBirthdayYear = (new Date()).getMonth() > 10 || ((new Date()).getMonth() === 10 && (new Date()).getDate() > 3) ? 2025 : 2024;
+      const nextBirthday = new Date(nextBirthdayYear, 10, 3);
+      const now = new Date();
+
+      const diffTime = nextBirthday - now;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      const age = nextBirthdayYear - birthDate.getFullYear();
+
+      ageCounter.textContent = `Тебе исполнится ${age} лет через ${diffDays} ${declOfNum(diffDays, ['день', 'дня', 'дней'])}.`;
+    }
+
+    function declOfNum(number, titles) {
+      const cases = [2, 0, 1, 1, 1, 2];
+      return titles[
+        (number % 100 > 4 && number % 100 < 20)
+          ? 2
+          : cases[(number % 10 < 5) ? number % 10 : 5]
+      ];
+    }
+
+    // Поделиться — через Web Share API, если доступно
+    document.getElementById("share-btn").addEventListener("click", () => {
+      const shareData = {
+        title: "С Днём Рождения, Вика!",
+        text: "Посмотри моё интерактивное поздравление для Вики! 🎉",
+        url: window.location.href
+      };
+
+      if (navigator.share) {
+        navigator.share(shareData)
+          .then(() => console.log("Поздравление отправлено!"))
+          .catch((err) => alert("Ошибка при отправке: " + err));
+      } else {
+        alert("К сожалению, функция 'Поделиться' не поддерживается вашим устройством. Просто скопируйте ссылку из адресной строки.");
+      }
+    });
+  </script>
+</body>
+</html>
